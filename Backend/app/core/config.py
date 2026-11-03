@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # --- AI Providers (M3 ke liye, abhi optional hain) ---
     DEEPGRAM_API_KEY: str | None = None
-    OPENAI_API_KEY: str | None = None
+    GROQ_API_KEY: str | None = None
     ELEVENLABS_API_KEY: str | None = None
 
     # --- Security (M6 ke liye, abhi optional) ---

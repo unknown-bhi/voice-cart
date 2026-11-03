@@ -7,7 +7,7 @@ pydantic-settings>=2.6,<3.0
 python-dotenv>=1.0,<2.0
 
 # --- LiveKit (server-side token generation, M1) ---
-livekit-api>=0.8,<1.0
+livekit-api>=1.0.2,<2.0
 
 # --- Database (REQ-VOX-004: session DB mein create) ---
 sqlalchemy[asyncio]>=2.0,<3.0
@@ -18,3 +18,10 @@ redis>=5.2,<6.0
 
 # --- Encryption (M6 mein use hoga, abhi install) ---
 cryptography>=43.0,<44.0
+
+
+# --- LiveKit Agents (M3: AI Pipeline) ---
+livekit-agents>=1.0,<2.0
+livekit-plugins-deepgram>=1.0,<2.0
+livekit-plugins-groq>=1.0,<2.0
+livekit-plugins-elevenlabs>=1.0,<2.0
