@@ -15,3 +15,9 @@ class SessionCreateResponse(BaseModel):
 class SessionEndResponse(BaseModel):
 
     status : str =Field(..., examples =['ended'])
+
+
+class InterruptionUpdateRequest(BaseModel):
+
+    room_name : str 
+

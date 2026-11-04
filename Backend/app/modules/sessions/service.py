@@ -7,6 +7,9 @@ from app.core.livekit import generate_livekit_token
 from app.core.config import settings
 from app.modules.sessions.models import Session
 from app.modules.sessions.schemas import SessionCreateResponse
+from sqlalchemy import select
+from sqlalchemy.sql import func
+
 
 class MaxSessionReachedError(Exception):
     'custom exceptio raised when user exceeds max concurrent sessions'
@@ -61,5 +64,15 @@ async def end_session(db: AsyncSession, session_id: uuid.UUID):
 
     return 'ended'
 
+async def record_interruption(db: AsyncSession, room_name : str):
 
+    stmt =select(Session).where(Session.room_name == room_name, Session.status =='active')
+
+    result = await db.execute(stmt)
+    session = result.scalar_one_or_none()
+
+    if session:
+        session.interruption_count += 1
+        await db.commit()
+        
     
