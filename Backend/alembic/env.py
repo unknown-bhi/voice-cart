@@ -5,6 +5,8 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
+
+
 from alembic import context
 
 # 1. Yahan apni settings aur Base import karein
@@ -12,7 +14,9 @@ from app.core.config import settings
 from app.core.db import Base
 # 2. Yahan apne SAARE models import karein taake Alembic unhein pehchan sake
 from app.modules.sessions.models import Session 
-
+from app.modules.connectors.models import Connector
+from app.modules.transcripts.models import Utterance
+from app.modules.tools.models import ToolCall
 # Alembic Config object
 config = context.config
 
