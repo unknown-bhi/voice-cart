@@ -148,3 +148,6 @@ async def update_interruption_count(room_name: str):
 
 if __name__ == '__main__':
     cli.run_app(WorkerOptions(entrypoint_fnc=entrypoint))
+
+    print('ok')
+    print('yes')
