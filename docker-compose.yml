@@ -1,25 +1,54 @@
 services:
-  # 1. Database
   db:
     image: postgres:16-alpine
-    # ... baaki same
-  # 2. Cache
+    environment:
+      POSTGRES_USER: voxlive
+      POSTGRES_PASSWORD: voxlive
+      POSTGRES_DB: voxlive
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U voxlive"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   redis:
     image: redis:7-alpine
-    # ... baaki same
-  # 3. FastAPI Backend
+    ports:
+      - "6379:6379"
+
   backend:
     build: 
       context: ./backend
       dockerfile: Dockerfile
-    # ... baaki same
-  # 4. LiveKit Agent (Worker)
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    volumes:
+      - ./backend:/app 
+
   agent:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    # ... baaki same
-  # 5. Next.js Frontend
+    command: python agent.py dev 
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - backend
+      - redis
+    volumes:
+      - ./backend:/app
+
   frontend:
     build:
       context: ./frontend
@@ -27,7 +56,10 @@ services:
       args:
         - NEXT_PUBLIC_LIVEKIT_URL=${NEXT_PUBLIC_LIVEKIT_URL}
         - NEXT_PUBLIC_BACKEND_URL=http://localhost:8000
-    # ... baaki same
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
 
 volumes:
   pgdata:
