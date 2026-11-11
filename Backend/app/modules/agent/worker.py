@@ -11,7 +11,7 @@ from app.modules.tools.registry import get_all_tools
 logger = logging.getLogger("voice-agent")
 logger.setLevel(logging.INFO)
 
-BACKEND_URL = 'http://localhost:8000'
+BACKEND_URL = 'http://backend:8000'
 
 async def get_session_id(room_name: str) -> str:
     """Backend se session_id fetch karta hai based on room name."""
