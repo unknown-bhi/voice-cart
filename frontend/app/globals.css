@@ -1,20 +1,235 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-/* Custom Glowing Animation for the AI Orb */
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 40px 10px rgba(59, 130, 246, 0.2); }
-  50% { box-shadow: 0 0 80px 20px rgba(59, 130, 246, 0.6); }
+:root {
+  --bg-main: #003A91;
+  --panel-bg: #00469E;
+  --neon-border: #00E5FF;
+  --blue-glow: #00AFFF;
+  --text-main: #FFFFFF;
 }
 
-.animate-glow {
-  animation: pulse-glow 3s infinite ease-in-out;
+body {
+  /* 🔥 Yeh woh exact rich blue color hai jo tumhare panel mein hai */
+  background-color: #00469E;
+  
+  background-image: 
+    /* Center se halki si light taake Avatar pop ho jaye */
+    radial-gradient(circle at center, rgba(0, 175, 255, 0.3) 0%, transparent 60%),
+    /* Futuristic Grid */
+    linear-gradient(rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+    
+  background-size: 100% 100%, 30px 30px, 30px 30px;
+  background-position: center;
+  color: white;
+  overflow: hidden;
 }
 
-/* Gradient Text */
-.text-gradient {
-  background: linear-gradient(to right, #60a5fa, #a78bfa, #f472b6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+/* 🔥 HUD Panel with Exact Colors */
+.hud-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--neon-border);
+  /* Cut corners */
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  /* Glow using #00AFFF */
+  box-shadow: 
+    inset 0 0 30px rgba(0, 175, 255, 0.3), 
+    0 0 30px rgba(0, 175, 255, 0.3);
+  position: relative;
+}
+
+.hud-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--neon-border);
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+  pointer-events: none;
+}
+
+/* Icons Glow using #00AFFF */
+.icon-glow {
+  filter: drop-shadow(0 0 6px var(--blue-glow));
+}
+
+@keyframes spin-slow { 100% { transform: rotate(360deg); } }
+@keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0, 175, 255, 0.4); }
+  50% { transform: scale(1.05); opacity: 1; box-shadow: 0 0 40px 20px rgba(0, 175, 255, 0.1); }
+  100% { transform: scale(0.95); opacity: 0.5; box-shadow: 0 0 0 0 rgba(0, 175, 255, 0); }
+}
+.animate-pulse-ring { animation: pulse-ring 3s infinite; }
+
+/* 🔥 Curved HUD Panel for Top & Bottom Bars */
+.hud-panel-curved {
+  background: rgba(0, 70, 158, 0.6);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 229, 255, 0.5);
+  /* Sharp cuts ki jagah rounded corners */
+  border-radius: 30px; 
+  box-shadow: 
+    inset 0 0 20px rgba(0, 175, 255, 0.2), 
+    0 0 20px rgba(0, 175, 255, 0.2);
+  position: relative;
+}
+
+/* 🔥 Wrapper (Yeh Cyan border ka kaam karega) */
+.top-bar-wrapper {
+  position: relative;
+  width: 100%;
+  height: 75px; /* Total height */
+  background: #00E5FF; /* Neon Border Color */
+  /* Sahi shape: Left se seedha, 30% par angle, center mein gehra cut */
+  clip-path: polygon(0 0, 100% 0, 100% 55px, 70% 55px, 65% 100%, 35% 100%, 30% 55px, 0 55px);
+  filter: drop-shadow(0 10px 15px rgba(0, 229, 255, 0.4)); /* Neeche Glow */
+}
+
+/* 🔥 Inner Box (Yeh Dark Blue background ka kaam karega) */
+.top-bar-inner {
+  position: absolute;
+  top: 2px; left: 2px; right: 2px; bottom: 2px; /* 2px border dikhane ke liye */
+  background: rgba(0, 50, 120, 0.95); /* Panel Color */
+  backdrop-filter: blur(20px);
+  /* Inner shape exactly wrapper jaisi, bas 2px choti */
+  clip-path: polygon(0 0, 100% 0, 100% 53px, 70% 53px, 65% 100%, 35% 100%, 30% 53px, 0 53px);
+}
+/* 🔥 Top Navigation Bar - Clean & Solid Approach */
+.top-nav-container {
+  width: 80%;
+  height: 60px;
+  display: flex;
+  position: relative;
+  z-index: 50;
+}
+
+/* 🔥 Wrapper (Glowing Border - 4 Cut Corners) */
+.hud-panel-left-wrapper {
+  position: relative;
+  width: 240px;
+  background: #00E5FF; /* Cyan Border Color */
+  padding: 2px; /* 2px border banane ke liye */
+  
+  /* 🔥 4 Corners Cut (Top-Left, Top-Right, Bottom-Right, Bottom-Left) */
+  clip-path: polygon(
+    20px 0,                  /* Top-Left cut start */
+    calc(100% - 20px) 0,     /* Top-Right cut start */
+    100% 20px,               /* Top-Right cut end */
+    100% calc(100% - 20px),  /* Bottom-Right cut start */
+    calc(100% - 20px) 100%,  /* Bottom-Right cut end */
+    20px 100%,               /* Bottom-Left cut start */
+    0 calc(100% - 20px),     /* Bottom-Left cut end */
+    0 20px                   /* Top-Left cut end */
+  );
+  
+  filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.7)); 
+}
+
+/* 🔥 Inner Box (Dark Blue Background - 4 Cut Corners) */
+.hud-panel-left-inner {
+  background: rgba(0, 40, 110, 0.95);
+  height: 100%;
+  
+  /* 🔥 Inner Shape: Wrapper jaisi, bas 2px choti */
+  clip-path: polygon(
+    18px 0, 
+    calc(100% - 18px) 0, 
+    100% 18px, 
+    100% calc(100% - 18px), 
+    calc(100% - 18px) 100%, 
+    18px 100%, 
+    0 calc(100% - 18px), 
+    0 18px
+  );
+  
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+
+/* Scrollbar styling for inner area */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; 
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 229, 255, 0.4); 
+  border-radius: 10px;
+}
+
+/* 🔥 Right Panel Wrapper (Glowing Border - 4 Cut Corners) */
+.hud-panel-right-wrapper {
+  position: relative;
+  width: 300px; /* Right panel thoda wide rakha hai text ke liye */
+  background: #00E5FF; /* Cyan Border Color */
+  padding: 2px; /* 2px border banane ke liye */
+  
+  /* 4 Corners Cut (Top-Left, Top-Right, Bottom-Right, Bottom-Left) */
+  clip-path: polygon(
+    20px 0, 
+    calc(100% - 20px) 0, 
+    100% 20px, 
+    100% calc(100% - 20px), 
+    calc(100% - 20px) 100%, 
+    20px 100%, 
+    0 calc(100% - 20px), 
+    0 20px
+  );
+  
+  filter: drop-shadow(0 0 15px rgba(0, 229, 255, 0.7)); 
+}
+
+/* 🔥 Right Panel Inner Box (Dark Blue Background) */
+.hud-panel-right-inner {
+  background: rgba(0, 40, 110, 0.95);
+  height: 100%;
+  
+  /* Inner Shape */
+  clip-path: polygon(
+    18px 0, 
+    calc(100% - 18px) 0, 
+    100% 18px, 
+    100% calc(100% - 18px), 
+    calc(100% - 18px) 100%, 
+    18px 100%, 
+    0 calc(100% - 18px), 
+    0 18px
+  );
+  
+  box-shadow: inset 0 0 20px rgba(0, 229, 255, 0.2);
+}
+
+
+/* 🔥 Eye Blinking Animation */
+@keyframes blink {
+  0%, 96%, 98% { transform: scaleY(1); }
+  97% { transform: scaleY(0.1); }
+}
+
+/* 🔥 Mouth Talking Animation */
+@keyframes talk {
+  0%, 100% { transform: scaleY(0.2); }
+  50% { transform: scaleY(1); }
+}
+
+/* 🔥 Avatar Floating (Breathing) */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-blink {
+  animation: blink 4s infinite;
+  transform-origin: center;
+}
+
+.animate-talk {
+  animation: talk 0.15s infinite alternate ease-in-out;
+  transform-origin: center;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
