@@ -1,28 +1,27 @@
-import redis.asyncio as redis
-from app.core.config import settings
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.ext.asyncio import AsyncSession
+from uuid import UUID
 
+from app.core.db import get_db
+from app.modules.connectors.service import create_connector,delete_connector
+from app.modules.connectors.schemas import ConnectorCreateRequest,ConnectorResponse
 
-redis_client = redis.from_url(settings.REDIS_URL, decode_responses =True)
+router = APIRouter(prefix ='/connectors', tags = ['Connectors'])
 
-SESSION_TTL_SECONDS = 15
+@router.post('', response_model =ConnectorResponse,status_code=status.HTTP_201_CREATED )
+async def api_create_connector(
+    payload: ConnectorCreateRequest,
+    db: AsyncSession = Depends(get_db)
+):
+    return await create_connector(db, payload)
 
-async def check_and_register_session(user_id :str):
+@router.delete('/{connector_id}' , status_code =status.HTTP_200_OK)
+async def api_delete_connector(
+    connector_id :UUID,
+    db: AsyncSession =Depends(get_db)
+):
+    success = await delete_connector(db, connector_id)
+    if not success:
+        raise HTTPException(status_code= 404, detail = 'Connector not found')
 
-    key =f'user:{user_id}:active_sessions'
-
-    current_count = await redis_client.incr(key)
-
-    if current_count ==1:
-        await redis_client.expire(key, SESSION_TTL_SECONDS)
-
-    if current_count > 2:
-
-        await redis_client.decr(key)
-        return False
-    return True
-
-async def remove_session(user_id : str):
-    key =f'user:{user_id}:active_sessions' 
-    current_count =await redis_client.decr(key)
-    if current_count < 0:
-        await redis_client.set(key,0)
+    return {'status' : 'deleted'}
