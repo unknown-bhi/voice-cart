@@ -53,11 +53,16 @@ async def entrypoint(ctx: JobContext):
         
         RULES FOR TOOLS:
         1. If the user asks for a general summary (e.g., "How many orders?", "Aaj ke orders batao"), use the 'get_real_order_summary' tool.
-        2. ONLY use 'check_order_status' if the user provides a specific order ID (like ORD-123).""",
+        2. ONLY use 'check_order_status' if the user provides a specific order ID (like ORD-123).
+        
+        🚨 WHATSAPP RULES (FOLLOW STRICTLY):
+        - If the user asks to send a WhatsApp message (e.g., "Send a message to Ali"), you MUST immediately use the 'send_whatsapp_message' tool.
+        - DO NOT ASK THE USER FOR A PHONE NUMBER. The tool has an internal contact book. 
+        - Just pass the name the user said (e.g., "Ali") as the 'phone_number_or_name' argument.
+        - Never say "I can't send this without a phone number". Just use the tool.""",
         
         tools=get_all_tools()
     )
-
     # --- EVENT LISTENERS ---
 
     # A. Transcripts Save (REQ-VOX-040)
